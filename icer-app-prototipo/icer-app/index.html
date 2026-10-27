@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ICER Empleo · App demo</title>
+<meta name="description" content="Prototipo de app de empleo de ICER: contratos ETT y contratación temporal por municipio (datos SEPE).">
+<meta name="theme-color" content="#213B7C">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+<!-- ============ Login (demo, sin autenticación real) ============ -->
+<section id="login" class="login" hidden>
+  <div class="login-caja">
+    <div class="marca"><img src="icons/icon-192.png" alt="" width="44" height="44"><div><b>ICER</b><span>Inteligencia laboral</span></div></div>
+    <h1>App de empleo para empresas</h1>
+    <p class="login-sub">Contratos ETT y contratación temporal por municipio, sector y ocupación.</p>
+    <div class="demo-aviso" role="note"><b>Demo</b> Prototipo sin autenticación real: no se pide ni se guarda ninguna contraseña.</div>
+    <form id="f-login">
+      <label>Empresa<select id="l-empresa"><option value="demo">Empresa demo (piloto)</option></select></label>
+      <label>Usuario<input id="l-usuario" type="text" value="demo@empresa-demo.es" autocomplete="off"></label>
+      <button type="submit" class="btn primario">Entrar en la demo</button>
+    </form>
+    <p class="login-pie">Datos: SEPE. Procesado por ICER.</p>
+  </div>
+</section>
+
+<!-- ============ App ============ -->
+<div id="app" class="app" hidden>
+  <header class="cab">
+    <div class="cab-izq">
+      <img src="icons/icon-192.png" alt="" width="32" height="32" class="cab-logo">
+      <div class="cab-tit"><b>ICER Empleo</b><span id="cab-empresa">Empresa demo</span></div>
+    </div>
+    <div class="seg" id="seg-ccaa" role="group" aria-label="Territorio"></div>
+    <button type="button" class="btn icono" id="b-filtros" aria-label="Filtros"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M3 5h18M6 12h12M10 19h4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg><span>Filtros</span><i id="n-filtros" hidden></i></button>
+  </header>
+  <div class="chips" id="chips"></div>
+
+  <nav class="nav" id="nav" aria-label="Secciones">
+    <a href="#inicio" data-v="inicio"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Inicio</span></a>
+    <a href="#mapa" data-v="mapa"><svg viewBox="0 0 24 24"><path d="M9 4l6 2 6-2v16l-6 2-6-2-6 2V6zM9 4v16M15 6v16"/></svg><span>Mapa</span></a>
+    <a href="#ranking" data-v="ranking"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span>Ranking</span></a>
+    <a href="#tendencias" data-v="tendencias"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg><span>Tendencias</span></a>
+    <a href="#notas" data-v="notas"><svg viewBox="0 0 24 24"><path d="M12 8v5M12 16.5v.5M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z"/></svg><span>Notas</span></a>
+    <button type="button" class="nav-salir" id="b-salir"><svg viewBox="0 0 24 24"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/></svg><span>Salir</span></button>
+  </nav>
+
+  <main class="contenido">
+    <section class="vista" id="v-inicio" data-v="inicio"></section>
+    <section class="vista" id="v-mapa" data-v="mapa" hidden>
+      <div class="mapa-layout">
+        <div class="tarjeta mapa-tarjeta">
+          <div class="mapa-cab">
+            <div><h2 id="mapa-tit">Mapa</h2><p class="sub" id="mapa-sub"></p></div>
+            <div class="seg peq" id="seg-vista" role="group" aria-label="Ver">
+              <button type="button" data-vista="variacion">Variación %</button><button type="button" data-vista="volumen">Volumen</button>
+            </div>
+          </div>
+          <div class="kpi-linea" id="mapa-kpi"></div>
+          <div class="avisos" id="mapa-avisos"></div>
+          <div class="mapa-caja" id="mapa-caja">
+            <svg id="mapa" viewBox="0 0 1000 800" aria-label="Mapa municipal"></svg>
+            <div class="mapa-zoom"><button type="button" id="z-mas" aria-label="Acercar">+</button><button type="button" id="z-menos" aria-label="Alejar">−</button><button type="button" id="z-reset" aria-label="Encuadrar">⤢</button></div>
+            <div class="tip" id="tip" hidden></div>
+          </div>
+          <div class="leyenda" id="leyenda"></div>
+          <div class="acciones"><button type="button" class="btn" id="b-csv-mapa">⬇ Descargar CSV (municipios)</button></div>
+        </div>
+        <aside class="tarjeta panel-det" id="panel-det"></aside>
+      </div>
+    </section>
+    <section class="vista" id="v-ranking" data-v="ranking" hidden></section>
+    <section class="vista" id="v-tendencias" data-v="tendencias" hidden></section>
+    <section class="vista" id="v-notas" data-v="notas" hidden></section>
+  </main>
+</div>
+
+<!-- hoja inferior (detalle de municipio en móvil, filtros) -->
+<div class="velo" id="velo" hidden></div>
+<section class="hoja" id="hoja" hidden role="dialog" aria-modal="true">
+  <div class="hoja-asa"></div>
+  <button type="button" class="hoja-cerrar" id="hoja-cerrar" aria-label="Cerrar">×</button>
+  <div class="hoja-cuerpo" id="hoja-cuerpo"></div>
+</section>
+<div class="toast" id="toast" hidden></div>
+<div class="cargando" id="cargando"><div class="spinner"></div><p>Cargando datos…</p></div>
+
+<script src="js/calculo.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
