@@ -1,6 +1,6 @@
 // Service worker de la app demo ICER Empleo: precarga la app y los datos para que funcione sin conexión.
 // Al publicar datos nuevos, sube VERSION para que los clientes descarguen la versión nueva.
-const VERSION='icer-demo-v2';
+const VERSION='icer-demo-v3';
 const ARCHIVOS=['./','./index.html','./css/app.css','./js/calculo.js','./js/app.js','./manifest.webmanifest',
   './data/datos.json','./data/geo.json','./fonts/inter.woff2','./icons/icon-192.png','./icons/icon-512.png'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(VERSION).then(c=>c.addAll(ARCHIVOS)).then(()=>self.skipWaiting()));});
